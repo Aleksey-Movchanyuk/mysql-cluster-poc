@@ -34,7 +34,7 @@ To set up and run the local MySQL Cluster, follow these steps:
    ```
 
 
-   ![Docker Compose Up Output](docs/docker_compose_up_output.png)
+   ![Docker Compose Up Output](docs/docker_compose_up_output.gif)
 
 4. Once the MySQL Cluster is up and running, you can connect to the SQL node using the exposed port 3306 and start testing the partitioning feature.
 
