@@ -1,0 +1,72 @@
+version: '3'
+services:
+    #Sets up the MySQL cluster ndb_mgmd process
+    database-manager:
+        image: mysql/mysql-cluster
+        command: ndb_mgmd
+        container_name: mysql-cluster-poc-database-manager
+        ports:
+            - "1186:1186"
+        volumes:
+            - ${PWD}/docker/cnf/my.cnf:/etc/my.cnf
+            - ${PWD}/docker/cnf/mysql-cluster.cnf:/etc/mysql-cluster.cnf
+        networks:
+          mysqlcluster_net:
+            ipv4_address: 172.28.0.2
+    #  Sets up the first MySQL cluster data node
+    database-node-1:
+        image: mysql/mysql-cluster
+        command: ndbd
+        container_name: mysql-cluster-poc-database-node-1
+        depends_on:
+            - database-manager
+        volumes:
+            - ${PWD}/docker/cnf/my.cnf:/etc/my.cnf
+            - ${PWD}/docker/cnf/mysql-cluster.cnf:/etc/mysql-cluster.cnf
+        networks:
+          mysqlcluster_net:
+            ipv4_address: 172.28.0.3
+    #  Sets up the second MySQL cluster data node
+    database-node-2:
+        image: mysql/mysql-cluster
+        command: ndbd
+        container_name: mysql-cluster-poc-database-node-2
+        depends_on:
+            - database-manager
+        volumes:
+            - ${PWD}/docker/cnf/my.cnf:/etc/my.cnf
+            - ${PWD}/docker/cnf/mysql-cluster.cnf:/etc/mysql-cluster.cnf
+        networks:
+          mysqlcluster_net:
+            ipv4_address: 172.28.0.4
+    #Sets up the first MySQL server process
+    database-server:
+        image: mysql/mysql-cluster
+        command: mysqld
+        container_name: mysql-cluster-poc-database-server
+        depends_on:
+            - database-manager
+            - database-node-1
+            - database-node-2
+        volumes:
+            - ${PWD}/docker/cnf/my.cnf:/etc/my.cnf
+            - ${PWD}/docker/cnf/mysql-cluster.cnf:/etc/mysql-cluster.cnf
+        environment:
+            - MYSQL_ROOT_PASSWORD=admin
+            - MYSQL_DATABASE=test_db
+            - MYSQL_USER=test
+            - MYSQL_PASSWORD=test
+            - MYSQL_ROOT_HOST=%
+        ports:
+            - "3306:3306"
+        networks:
+          mysqlcluster_net:
+            ipv4_address: 172.28.0.10
+
+networks:
+ mysqlcluster_net:
+  driver: bridge
+  ipam:
+   config:
+    - subnet: 172.28.0.0/16
+      gateway: 172.28.5.254
