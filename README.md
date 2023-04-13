@@ -40,7 +40,7 @@ To set up and run the local MySQL Cluster, follow these steps:
 
 ## Exploring MySQL Partitioning
 
-After setting up the MySQL Cluster PoC, you can use the various types of table partitions available in MySQL to optimize data management and query performance. Refer to this [blog post](link_to_blog_post) for an in-depth explanation of MySQL table partitioning types and examples.
+After setting up the MySQL Cluster PoC, you can use the various types of table partitions available in MySQL to optimize data management and query performance. Refer to this [blog post](https://medium.com/@alex_m_datatogo/understanding-mysql-table-partitioning-types-and-examples-d094a77cc19c) for an in-depth explanation of MySQL table partitioning types and examples.
 
 ## Stopping and Cleaning Up
 
